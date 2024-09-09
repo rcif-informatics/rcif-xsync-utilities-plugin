@@ -1,8 +1,6 @@
 package org.rcif.xsync.utilities.generators;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Hex;
-import org.nrg.xdat.XDAT;
 import org.nrg.xdat.base.BaseElement;
 import org.nrg.xdat.model.XnatExperimentdataI;
 import org.nrg.xdat.om.XnatSubjectdata;
@@ -20,8 +18,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Component
