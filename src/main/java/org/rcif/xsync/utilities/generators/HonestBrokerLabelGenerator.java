@@ -29,8 +29,7 @@ import java.util.List;
 public class HonestBrokerLabelGenerator implements XsyncLabelGeneratorI {
 	
 	@Autowired
-	private HonestBrokerService honestBrokerService2;
-	private final HonestBrokerService honestBrokerService = XDAT.getContextService().getBeanSafely(HonestBrokerService.class);
+	private HonestBrokerService honestBrokerService;
     /**
      * Generate new label for data based on date/time
      * @param user the user
@@ -57,14 +56,7 @@ public class HonestBrokerLabelGenerator implements XsyncLabelGeneratorI {
     private String getMappedLabel(String label, String xsiType, String project) {
     	
     	String returnLabel = label;
-    	log.error("HELLO project=" + project);
-    	log.error("HELLO honestBrokerService=" + honestBrokerService);
-    	log.error("HELLO honestBrokerService2=" + honestBrokerService2);
     	final MappingsResponse mappingsResponse = honestBrokerService.getMappingsForProject(project);
-    	log.error("HELLO mappingsResponse=" + mappingsResponse);
-    	if (mappingsResponse != null) {
-    	log.error("HELLO mappingsResponse.getSubjectMappings()=" + mappingsResponse.getSubjectMappings());
-    	}
     	if (mappingsResponse != null) {
     		if (xsiType.toLowerCase().contains("subjectdata")) {
     			returnLabel = getLabelFromSubjectList(label, mappingsResponse.getSubjectMappings());
