@@ -1,0 +1,97 @@
+def pluginVersion = '0.1.0-SNAPSHOT'
+
+group 'org.rcif'
+version pluginVersion
+
+def vXnatDev = '1.8.3'
+def vXnat = '1.8.3'
+
+//apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'java-library'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2" }
+        maven { url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release' }
+        maven { url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot' }
+        maven { url 'https://nrgxnat.jfrog.io/nrgxnat/hcp-release' }
+        maven { url 'https://nrgxnat.jfrog.io/nrgxnat/hcp-snapshot' }
+	maven {
+        	url 'https://www.dcm4che.org/maven2'
+        	name 'dcm4che Maven Repository'
+    	}
+    }
+    dependencies {
+        classpath "io.franzbecker:gradle-lombok:3.3.0"
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url "https://repo.osgeo.org/repository/release" }
+    mavenCentral()
+    jcenter()
+    maven { url 'https://nrgxnat.jfrog.io/nrgxnat/libs-release' }
+    maven { url 'https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot' }
+    maven { url 'https://nrgxnat.jfrog.io/nrgxnat/hcp-release' }
+    maven { url 'https://nrgxnat.jfrog.io/nrgxnat/hcp-snapshot' }
+    maven { url 'https://nrgxnat.jfrog.io/nrgxnat/ext-release' }
+}
+
+dependencies {
+
+    api platform("org.nrg:parent:${vXnat}")
+    implementation platform("org.nrg:parent:${vXnat}")
+    annotationProcessor "org.nrg:framework:${vXnat}"
+    //annotationProcessor("org.nrg.ccf:pipeline-control-panel-plugin:0.1.0-SNAPSHOT") {
+//	transitive = false
+    //}
+    api "org.nrg.xsync:xsync-plugin:1.5.0"
+    api("org.nrg.xsync:xsync-plugin:1.3.3-SNAPSHOT") {
+        exclude group: '*'
+    }
+    api "org.nrg.ccf:ccf-common-utilities-plugin:0.1.0-SNAPSHOT"
+    api "org.nrg.ccf:pipeline-control-panel-plugin:0.1.0-SNAPSHOT"
+    
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('name', 'RCIF XSync Utilities Plugin')
+                root.appendNode('url', 'https://github.com/rcif-informatics/rcif-xsync-utilities-plugin')
+                root.appendNode('inceptionYear', '2024')
+
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', 'https://github.com/rcif-informatics/rcif-xsync-utilities-plugin')
+                scm.appendNode('connection', 'scm:https://github.com/rcif-informatics/rcif-xsync-utilities-plugin.git')
+                scm.appendNode('developerConnection', 'scm:https://github.com/rcif-informatics/rcif-xsync-utilities-plugin.git')
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'Simplified BSD 2-Clause License')
+                license.appendNode('url', 'http://xnat.org/about/license.php')
+                license.appendNode('distribution', 'repo')
+
+                def developers = root.appendNode('developers')
+
+                def mhodge = developers.appendNode('developer')
+                mhodge.appendNode('id', 'hodgem')
+                mhodge.appendNode('name', 'Mike Hodge')
+                mhodge.appendNode('email', 'hodgem@wustl.edu')
+            }
+        }
+    }
+}
+
